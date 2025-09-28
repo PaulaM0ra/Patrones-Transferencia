@@ -1,0 +1,134 @@
+# AlquilerApp – Guía de Instalación y Ejecución en Windows (CMD/PowerShell)
+
+Java 17 | Spring Boot 3.4.5 | Maven 3.x | PostgreSQL 14+
+
+------------------------------------------
+1. Requisitos previos
+------------------------------------------
+- Windows 10/11
+- Acceso a CMD o PowerShell como administrador
+- Git instalado
+
+Verificar git:
+git --version
+
+------------------------------------------
+2. Instalar Java 17 (OpenJDK)
+------------------------------------------
+PowerShell:
+winget install OpenJDK.17
+
+Verificar instalación:
+java -version
+javac -version
+
+Configurar JAVA_HOME:
+setx JAVA_HOME "C:\Program Files\OpenJDK\17"
+setx PATH "%JAVA_HOME%\bin;%PATH%"
+
+Cerrar y abrir nueva terminal para aplicar cambios.
+
+------------------------------------------
+3. Instalar Maven
+------------------------------------------
+PowerShell:
+winget install Apache.Maven
+
+Verificar:
+mvn -v
+
+Nota: Puedes usar el wrapper incluido en el proyecto (`mvnw`) si no quieres instalar Maven globalmente.
+
+------------------------------------------
+4. Instalar PostgreSQL
+------------------------------------------
+PowerShell:
+winget install PostgreSQL.PostgreSQL.14
+
+Verificar:
+psql --version
+
+Crear usuario y base de datos:
+psql -U postgres
+
+En consola de PostgreSQL:
+CREATE USER tu_usuario WITH PASSWORD 'tu_password';
+CREATE DATABASE atuendos_db OWNER tu_usuario;
+\q
+
+------------------------------------------
+5. Clonar el proyecto
+------------------------------------------
+cd D:\Escritorio
+git clone https://github.com/tu-usuario/AlquilerApp.git
+cd AlquilerApp
+
+------------------------------------------
+6. Configurar propiedades de conexión
+------------------------------------------
+Crear o editar el archivo "src/main/resources/application.properties" con:
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/atuendos_db
+spring.datasource.username=tu_usuario
+spring.datasource.password=tu_password
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+------------------------------------------
+7. Abrir proyecto en NetBeans
+------------------------------------------
+1. Abrir NetBeans
+2. File → Open Project
+3. Seleccionar carpeta "AlquilerApp"
+4. NetBeans cargará automáticamente las dependencias Maven
+
+------------------------------------------
+8. Construir y ejecutar la aplicación
+------------------------------------------
+Desde PowerShell o CMD:
+
+./mvnw clean install
+./mvnw spring-boot:run
+
+Desde NetBeans:
+- Clic derecho sobre el proyecto → Run
+- Clase principal: com.losatuendos.alquilerapp.AlquilerAppApplication
+- Backend disponible en http://localhost:8080
+
+------------------------------------------
+9. Ejecutar pruebas unitarias
+------------------------------------------
+Desde PowerShell o CMD:
+./mvnw test
+
+Desde NetBeans:
+- Clic derecho sobre "src/test/java" → Run Tests
+
+------------------------------------------
+10. Endpoints principales
+------------------------------------------
+MÉTODO  | RUTA                                  | DESCRIPCIÓN
+------- | ------------------------------------- | -------------------------
+POST    | /api/clientes                          | Registrar cliente
+GET     | /api/clientes/{id}                     | Consultar cliente por ID
+POST    | /api/empleados                         | Registrar empleado
+GET     | /api/empleados/{id}                    | Consultar empleado por ID
+POST    | /api/prendas                           | Registrar prenda
+GET     | /api/prendas/talla/{talla}             | Consultar prendas por talla
+POST    | /api/alquileres                        | Registrar alquiler
+GET     | /api/alquileres/{id}                   | Consultar alquiler por ID
+GET     | /api/alquileres/cliente/{clienteId}    | Consultar alquileres de un cliente
+GET     | /api/alquileres/fecha/{yyyy-MM-dd}     | Consultar alquileres por fecha
+POST    | /api/lavanderia/registro               | Registrar prenda para lavandería
+GET     | /api/lavanderia/cola                   | Ver cola de lavandería
+POST    | /api/lavanderia/enviar                 | Enviar prendas a lavandería
+
+------------------------------------------
+11. Tips finales
+------------------------------------------
+- Si NetBeans no permite escribir en la terminal, usar PowerShell o CMD externa.
+- Siempre iniciar PostgreSQL antes de correr la app.
+- Para actualizar dependencias: clic derecho sobre el proyecto → Reload Project.
+- Para detener la aplicación Spring Boot, usar Ctrl+C en la terminal.
